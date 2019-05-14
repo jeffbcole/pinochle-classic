@@ -3110,7 +3110,7 @@ var Game = function () {
             case 'ChoosingPassCards':
             {
                 var player = this.players[0];
-                var passingCardsCount = GetStatistic('setting_passing_cards_count');
+                var passingCardsCount = GetSetting('setting_passing_cards_count');
                 var optimalCards = player.FindBestPassingCards(passingCardsCount, game);
                 BumpCards(optimalCards, 0);
             }
@@ -3129,7 +3129,7 @@ var Game = function () {
         var optimalCards = [];
         if (this.currentMoveStage == 'ChoosingPassCards') {
             var player = this.players[0];
-            var passingCardsCount = GetStatistic('setting_passing_cards_count');
+            var passingCardsCount = GetSetting('setting_passing_cards_count');
             optimalCards = player.FindBestPassingCards(passingCardsCount, game);
 
         } else if (this.currentMoveStage === 'ChoosingTrickCard') {
