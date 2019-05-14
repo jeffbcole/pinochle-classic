@@ -1,0 +1,622 @@
+.player_name {
+    visibility: hidden;
+    position: absolute;
+    width: 100px;
+    text-align: center;
+    font-size: 16pt;
+    text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.player_score {
+    visibility: hidden;
+    position: absolute;
+    width: 200px;
+    text-align: center;
+    font-size: 28pt;
+    text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.player_thinking {
+    position: absolute;
+    width: 75px;
+    height: 60px;
+    opacity: 1;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.circular {
+    animation: rotate 2s linear infinite;
+    height: 50px;
+    width: 50px;
+    left: 12.5px;
+    top: 5px;
+    position: relative;
+    -webkit-filter: drop-shadow( 3px 3px 1px rgba(0, 0, 0, .7));
+    filter: drop-shadow( 3px 3px 1px rgba(0, 0, 0, .7));
+}
+  
+.player_thinking_path {
+    stroke-dasharray: 1,200;
+    stroke-dashoffset: 0;
+    stroke:#0057e7;
+    animation: dash 1.5s ease-in-out infinite;
+    stroke-linecap: round;
+}
+@keyframes rotate{
+    100%{
+        transform: rotate(360deg);
+    }
+}
+@keyframes dash{
+    0%{
+        stroke-dasharray: 1,200;
+        stroke-dashoffset: 0;
+    }
+    50%{
+       stroke-dasharray: 89,200;
+       stroke-dashoffset: -35;
+    }
+    100%{
+        stroke-dasharray: 89,200;
+        stroke-dashoffset: -124;
+    }
+}
+
+#trump_suit_indicator {
+    position: absolute;
+    width: 70px;
+    text-align: center;
+    font-size: 14pt;
+    text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+    visibility: hidden;
+}
+
+#trump_suit_image {
+    background-image:url('images/score_heart.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 70px;
+    height: 50px;
+    margin-left: 4px;
+    margin-top: 3px;
+}
+
+#trick_score_bubble {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%,-50%);
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    background: #0000BB;
+    border: 2px solid white;
+    box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
+}
+
+#trick_score_points {
+    display: block;
+    color: white;
+    text-align: center;
+    font-size: 32px;
+    margin-top: 10px;
+}
+
+#trick_score_label {
+    display: block;
+    color: white;
+    text-align: center;
+    font-size: 12px;   
+}
+
+#accept_trick_result {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    width: 150px;
+    height: 50px;
+    cursor: pointer;
+	border:#FFFFFF 2px solid;
+	border-radius:15px;
+	background:linear-gradient(0deg, #000000 50%, #404040 50%);
+	color:white;
+	font-size:18pt;
+	box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
+}
+
+#accept_trick_result:hover {
+    background:linear-gradient(0deg, #222222 50%, #555555 50%);
+}
+
+#accept_round_result_button {
+    width: 150px;
+    height: 50px;
+    cursor: pointer;
+	border:#FFFFFF 2px solid;
+	border-radius:15px;
+	background:linear-gradient(0deg, #000000 50%, #404040 50%);
+	color:white;
+	font-size:18pt;
+}
+
+#accept_round_result_button:hover {
+    background:linear-gradient(0deg, #222222 50%, #555555 50%);
+}
+
+#player_play_prompt {
+    position: absolute;
+    width: 200px;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    font-size: 16pt;
+    text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#hint_button {
+    position: absolute;
+    cursor: pointer;
+    width: 80px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0);
+    border:#FFFFFF 2px solid;
+    border-width: 1px;
+    border-radius: 7px;
+    color:white;
+    font-size: 18px;
+    padding: 0px;
+    visibility: hidden;
+    opacity: 0;
+}
+
+#hint_button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+#undo_button {
+    position: absolute;
+    cursor: pointer;
+    width: 70px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0);
+    border:#FFFFFF 2px solid;
+    border-width: 1px;
+    border-radius: 7px;
+    color:white;
+    font-size: 13pt;
+    visibility: hidden;
+    opacity: 0;
+}
+
+#undo_button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+#redo_button {
+    position: absolute;
+    cursor: pointer;
+    width: 70px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0);
+    border:#FFFFFF 2px solid;
+    border-width: 1px;
+    border-radius: 7px;
+    color:white;
+    font-size: 13pt;
+    visibility: hidden;
+    opacity: 0;
+}
+
+#redo_button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+#choose_trump_suit_view {
+    position: absolute;
+    transform: translate(-50%,-50%);
+    opacity: 0;
+    visibility: hidden;
+}
+
+#choose_trump_prompt {
+    text-align: center;
+    color: white;
+    font-size: 22pt;
+    text-shadow: 3pt 3pt rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+}
+
+.choose_trump_button {
+    background: #00000000;
+    border: none;
+    cursor: pointer;
+}
+
+.choose_trump_image {
+    height: 100px;
+}
+
+#select_passing_cards_message {
+    visibility: hidden;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 16pt;
+    text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.select_passing_card_region {
+    position: absolute;
+    opacity:  0;
+    border-radius: 8px;
+    background: #00000022;
+    border: 2px solid white;
+    width: 110px;
+    height: 157px;
+}
+
+#confirm_passing_cards_button {
+    position: absolute;
+    cursor: pointer;
+    border:#FFFFFF 2px solid;
+    border-radius:8px;
+    background:linear-gradient(0deg, #000000 50%, #404040 50%);
+    color:white;
+    width: 130px;
+    height: 50px;
+    font-size:14pt;
+    box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
+    transform: translate(-50%,0%);
+    opacity: 0;
+    visibility: hidden;
+}
+
+#confirm_passing_cards_button:hover {
+    background:linear-gradient(0deg, #222222 50%, #555555 50%);
+}
+
+.meld_view_north_south {
+    position: absolute;
+    transform: translate(-50%,0%);
+    min-width: 75px;
+	max-width: 450px;
+	z-index: 999;
+	opacity:0;
+	pointer-events: none;
+	background:#0000BB;
+	border:#FFFFFF 2px solid;
+	border-radius:15px;
+	box-shadow: 15px 15px 0px rgba(0,0,0,0.5);
+}
+
+.meld_view_east_west {
+    position: absolute;
+    transform: translate(-50%,0%);
+    min-width: 75px;
+	max-width: 250px;
+	z-index: 999;
+	opacity:0;
+	pointer-events: none;
+	background:#FF0000;
+	border:#FFFFFF 2px solid;
+	border-radius:15px;
+	box-shadow: 15px 15px 0px rgba(0,0,0,0.5);
+}
+
+.meld_view_title {
+    display: block;
+	text-align:center;
+	font-size:12pt;
+	color: #FFFFFF;
+    margin-top:3px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.meld_view_value {
+    display: block;
+	text-align:center;
+	font-size:26pt;
+	color: #FFFFFF;
+}
+
+#round_result_view {
+    position: absolute;
+	top:40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+    z-index: 998;
+    width: 240px;
+    height:320px;
+    background:#000000;
+	border:#FFFFFF 2px solid;
+	border-radius:20px;
+	box-shadow: 30px 30px 0px rgba(0,0,0,0.5);
+	margin: auto;
+    text-align: center;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+}
+
+#round_result_title {
+    color: white;
+    font-size: 26px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#round_result_names_row {
+    height: 55px;
+}
+
+#round_result_names_north_south {
+    position: absolute;
+    width: 100px;
+    left: 20px;
+    background: #0000BB;
+    padding: 5px 0px;
+}
+
+#round_result_names_east_west {
+    position: absolute;
+    width: 100px;
+    left: 50%;
+    background: #FF0000;
+    padding: 5px 0px;
+}
+
+.round_result_row {
+    display: block;
+    width: 100%;
+    height: 30px;
+}
+
+.round_result_row_label {
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+}
+
+.round_result_row_value_north_south {
+    position: absolute;
+    width: 50%;
+    font-size: 20px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.round_result_row_value_east_west {
+    position: absolute;
+    width: 50%;
+    left: 50%;
+    font-size: 20px;
+    height: 30px;
+    line-height: 30px;
+}
+
+#round_result_line {
+    display: block;
+    width: 80%;
+    left: 10%;
+    height: 2px;
+    background: white;
+    margin-top: 5px;
+}
+
+#round_result_totals_row {
+    display: block;
+    width: 100%;
+    height: 50px;
+    margin-top: 10px;
+}
+
+#round_result_totals_label {
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    line-height: 20px;
+    font-size: 14px;
+}
+
+#round_result_totals_north_south {
+    position: absolute;
+    width: 50%;
+    font-size: 28px;
+    height: 35px;
+    line-height: 35px;
+}
+
+#round_result_totals_east_west {
+    position: absolute;
+    width: 50%;
+    left: 50%;
+    font-size: 28px;
+    height: 35px;
+    line-height: 35px;
+}
+
+#GameOverView {
+    z-index: 999;
+    width: 340px;
+    height:100px;
+    background:#000000;
+	border:#FFFFFF 2px solid;
+	border-radius:10px;
+	box-shadow: 30px 30px 0px rgba(0,0,0,0.5);
+	position: absolute;
+	top:50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+    margin: auto;
+    text-align: center;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+}
+
+#GameOverResultText {
+    margin-top: 10px;
+    font-size: 24pt;
+}
+
+#GameOverResultText2 {
+    margin-top: 10px;
+    font-size: 20pt;
+}
+
+#round_simulations_view {
+    position: absolute;
+	top:280px;
+	left: 50%;
+	transform: translate(-50%, -50%);
+    z-index: 999;
+    width: 500px;
+    height:420px;
+    background:#101010;
+	border:#FFFFFF 2px solid;
+	border-radius:20px;
+	box-shadow: 30px 30px 0px rgba(0,0,0,0.5);
+	margin: auto;
+    text-align: center;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+}
+
+#round_simulations_title {
+    position: absolute;
+    width: 80%;
+    left: 10%;
+    font-size:26px;
+	top: 5px;
+}
+
+#round_simulations_subtitle {
+    position: absolute;
+    width: 70%;
+    left: 15%;
+    top: 40px;
+    font-size: 16px;
+}
+
+#round_simulations_graphs_container {
+    position: absolute;
+    width: 450px;
+    height: 325px;
+    top: 90px;
+    left: 25px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.round_simulations_histogram {
+    display: block;
+    position: relative;
+    width: 450px;
+    height: 70px;
+    margin-bottom: 10px;
+}
+
+.round_simulations_horizontal_axis {
+    position: absolute;
+    width: 450px;
+    height: 1px;
+    background: #555555;
+    top: 55px;
+}
+
+.round_simulations_horizontal_axis_label {
+    position: absolute;
+    top: 55px;
+    font-size: 12px;
+    color: #555555;
+}
+
+.round_simulations_bar {
+    position: absolute;
+    width: 6px;
+    height: 50px;
+    top: 5px;
+    background: blue;
+    transform-origin: bottom;
+    transform: scaleY(1);
+}
+
+.round_simulations_vertical_line {
+    position: absolute;
+    width: 2px;
+    height: 50px;
+    top: 5px;
+    background: white;
+}
+
+.round_simulations_safe_bid_value {
+    position: absolute;
+    width: 100px;
+    text-align: right;
+    font-size: 22px;
+    color: white;
+    transform: translateX(-105px);
+    top: 10px;
+}
+
+.round_simulations_safe_bid_label {
+    position: absolute;
+    width: 100px;
+    text-align: right;
+    font-size: 14px;
+    color: white;
+    transform: translateX(-105px);
+    top: 35px;
+}
+
+.round_simulations_suggested_bid_value {
+    position: absolute;
+    width: 100px;
+    text-align: left;
+    font-size: 22px;
+    transform: translateX(5px);
+    color: white;
+    top: 10px;
+}
+
+.round_simulations_suggested_bid_label {
+    position: absolute;
+    width: 100px;
+    text-align: left;
+    font-size: 14px;
+    color: white;
+    transform: translateX(5px);
+    top: 35px;
+}
+
+.round_simulations_suit_image {
+    position: absolute;
+    left: 50px;
+    height: 55px;
+    transform: translateX(-50%);
+}
+
+#round_simulations_explanation {
+    position: absolute;
+    width: 90%;
+    left: 5%;
+    top: 310px;
+    font-size: 16px;
+}

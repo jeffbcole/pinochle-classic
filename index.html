@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-127156293-1"></script>
+	<script>
+  		window.dataLayer = window.dataLayer || [];
+  		function gtag(){dataLayer.push(arguments);}
+  		gtag('js', new Date());
+  		gtag('config', 'UA-127156293-1');
+	</script>
+
+
+	<title>Pinochle Classic | Play online in your web browser for free!</title>
+	<meta charset="utf-8">
+	<meta name="description" content="Play pinochle online with this website.  This is the best free pinochle game online. The site is built with HTML CSS and Javascript">
+	<meta name="author" content="Pinochle Card Classic">
+
+	<link rel="stylesheet" href="menus.css">
+	<link rel="stylesheet" href="cards.css">
+	<link rel="stylesheet" href="scoreboard.css">
+	<link rel="stylesheet" href="game.css">
+
+	<script>
+		//
+		// Initialize
+		//
+		var game = null;
+
+		window.onload = function () {
+			if (redirectToAppStore()) {
+				return;
+			}
+			UpdateBackgroundImageFromSettings();
+			setTimeout(function () {
+				ShowMainMenu(false);
+				ShowTitle();
+			}, 500);
+
+			game = new Game();
+
+		};
+
+		window.onresize = function() {
+			game.OnResizeWindow();
+		}
+
+	</script>
+
+	<script type="text/javascript" src="menus.js"></script>
+	<script type="text/javascript" src="settings.js"></script>
+	<script type="text/javascript" src="game.js"></script>
+	<script type="text/javascript" src="scoreboard.js"></script>
+	<script type="text/javascript" src="player.js"></script>
+	<script type="text/javascript" src="GameSimulator.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
+	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
+	<script>
+			window.addEventListener("load", function(){
+			window.cookieconsent.initialise({
+				"palette": {
+			"popup": {
+			"background": "#252e39"
+			},
+			"button": {
+			"background": "#14a7d0"
+			}
+		},
+			"theme": "edgeless",
+			"position": "bottom-left",
+			"content": {
+				"message": "This site uses cookies to analyze traffic and for ad personalization and ad measurement purposes.",
+				"dismiss": "OK",
+				"link": "Learn more",
+				"href": "https://policies.google.com/technologies/cookies"
+			}
+			})});
+	</script>
+
+</head>
+
+<body>
+
+	<div id="game_title">
+		<center>
+			<div class="t1">PINOCHLE</div>
+			<div class="t2">CLASSIC</div>
+		</center>
+	</div>
+
+	<div id="below_cards_messages_region">
+		<div class="player_name" id="player_name_South"></div>
+		<div class="player_name" id="player_name_West" style="text-align: left; margin-left:10px"></div>
+		<div class="player_name" id="player_name_North"></div>
+		<div class="player_name" id="player_name_East" style="text-align: right;"></div>
+		
+		<div class="player_score" id="player_score_South"></div>
+		<div class="player_score" id="player_score_West" style="text-align:left; margin-left:10px"></div>
+		<div class="player_score" id="player_score_North"></div>
+		<div class="player_score" id="player_score_East" style="text-align:right; margin-right:10px"></div>
+
+		<div id="player_play_prompt">Drop a card here</div>
+
+		<div id="select_passing_cards_message">Select 3 cards to pass left:</div>
+		<div id="select_passing_cards_region_0" class="select_passing_card_region"></div>
+		<div id="select_passing_cards_region_1" class="select_passing_card_region"></div>
+		<div id="select_passing_cards_region_2" class="select_passing_card_region"></div>
+		<div id="select_passing_cards_region_3" class="select_passing_card_region"></div>
+		<button id="confirm_passing_cards_button" onclick="game.passingCardsConfirmed()">Pass Cards</button>
+	
+		<button id="hint_button" onclick="game.OnHintButtonClick()">Hint</button>
+		<button id="undo_button" onclick="game.OnUndoButtonClick()">Undo</button>
+		<button id="redo_button" onclick="game.OnRedoButtonClick()">Redo</button>
+		
+		<div id="trump_suit_indicator">
+			<center>
+				<div id="trump_suit_text">Trump</div>
+				<div id="trump_suit_image"></div>
+			</center>
+		</div>
+
+		<div id="scoreboard">
+			<div id="scoreboardBackground" onclick="game.OnScoreboardClick()">
+				<div id="scoreboardNorthSouth">
+					<div class="scoreboardName" id="scoreboardNameNorthSouth">You & Dixon</div>
+					<div id="scoreboardScoreBackgroundNorthSouth"></div>
+					<div id="scoreboardScoreFillNorthSouth"></div>
+					<div class="scoreboardScore" id="scoreboardScoreNorthSouth"></div>
+				</div>
+				<div id="scoreboardEastWest">
+					<div class="scoreboardName" id="scoreboardNameEastWest">Charlotte & Isabella</div>
+					<div id="scoreboardScoreBackgroundEastWest"></div>
+					<div id="scoreboardScoreFillEastWest"></div>
+					<div class="scoreboardScore" id="scoreboardScoreEastWest"></div>
+				</div>
+				
+				<div id="scoreboardRowBid">
+					<div class="scoreboardRowTitle">Bid</div>
+					<div class="scoreboardRowLabelNorthSouth" id="scoreboardRowBidNorthSouth"></div>
+					<div class="scoreboardRowLabelEastWest" id="scoreboardRowBidEastWest"></div>
+				</div>
+
+				<div id="scoreboardRowMeld">
+					<div class="scoreboardRowTitle">Meld</div>
+					<div class="scoreboardRowLabelNorthSouth" id="scoreboardRowMeldNorthSouth"></div>
+					<div class="scoreboardRowLabelEastWest" id="scoreboardRowMeldEastWest"></div>
+				</div>
+			
+				<div id="scoreboardRowCounters">
+					<div class="scoreboardRowTitle">Counters</div>
+					<div class="scoreboardRowLabelNorthSouth" id="scoreboardRowCountersNorthSouth"></div>
+					<div class="scoreboardRowLabelEastWest" id="scoreboardRowCountersEastWest"></div>
+				</div>
+
+				<div id="scoreboardRoundScoresRegion"></div>
+			</div>
+			<div id="scoreboardDifficulty"></div>
+		</div>
+	</div>
+
+	<div id="cards_region"></div>
+
+	<button id="get_more_games_button" onclick="PlayMoreGamesButtonPressed()">
+		Play More<br>Card Classics
+	</button>
+
+	</div>
+
+	<div id="adView" align="center">
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- Pinochle Classic Web -->
+		<ins class="adsbygoogle"
+				style="display:block;width:728px;height:90px"
+				data-ad-client="ca-pub-2857597813964310"
+				data-ad-slot="7122255786"
+				data-ad-format="auto"
+				data-full-width-responsive="true"></ins>
+		<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</div>
+
+	<div id="choose_bid_view">
+		<table>
+			<tr>
+				<td><button class="choose_bid_button" onclick="game.OnDecrementBidButtonPressed();" style="width:50px;height:50px">-</button></td>
+				<td><button id="submit_bid_button" class="choose_bid_button" onclick="game.OnSubmitBidButtonPressed();" style="width:200px;height:60px">Bid: 23</button></td>
+				<td><button class="choose_bid_button" onclick="game.OnIncrementBidButtonPressed();" style="width:50px;height:50px">+</button></td>
+			</tr>
+			<tr>
+				<td colspan="3"><div style="text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);font-size: 16pt;text-align:center;height:25px;">or</div></td>
+			</tr>
+			<tr>
+				<td colspan="3"><center><button class="choose_bid_button" onclick="game.OnPassBidButtonPressed();" style="width:200px;height:60px">Pass</button></center></td>
+			</tr>
+		</table>
+	</div>
+
+	<div id="choose_trump_suit_view">
+		<table>
+			<tr>
+				<td colspan="4"><div id="choose_trump_prompt">Select the trump suit:</div></td>
+			</tr>
+			<tr>
+				<td><button class="choose_trump_button" onclick="game.OnTrumpSuitButtonPressed('S')"><img class="choose_trump_image" src="images/score_spade.png" ondragstart="return false;" /></button></td>
+				<td><button class="choose_trump_button" onclick="game.OnTrumpSuitButtonPressed('H')"><img class="choose_trump_image" src="images/score_heart.png" ondragstart="return false;" /></button></td>
+				<td><button class="choose_trump_button" onclick="game.OnTrumpSuitButtonPressed('C')"><img class="choose_trump_image" src="images/score_club.png" ondragstart="return false;" /></button></td>
+				<td><button class="choose_trump_button" onclick="game.OnTrumpSuitButtonPressed('D')"><img class="choose_trump_image" src="images/score_diamond.png" ondragstart="return false;" /></button></td>
+			</tr>
+		</table>
+	</div>
+
+	<div id="player_thinking_West" class="player_thinking">
+		<svg class="circular">
+			<circle class="player_thinking_path" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"></circle>
+		</svg>
+	</div>
+
+	<div id="player_thinking_North" class="player_thinking">
+		<svg class="circular">
+			<circle class="player_thinking_path" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"></circle>
+		</svg>
+	</div>
+	
+	<div id="player_thinking_East" class="player_thinking">
+		<svg class="circular">
+			<circle class="player_thinking_path" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"></circle>
+		</svg>
+	</div>
+
+	<div class="bid_view" id="bid_view_West">
+		<div class="bid_view_title" id="bid_view_title_West">Bid:</div>
+		<div class="bid_view_value" id="bid_view_value_West" >20</div>
+	</div>
+
+	<div class="bid_view" id="bid_view_North">
+		<div class="bid_view_title" id="bid_view_title_North">Bid:</div>
+		<div class="bid_view_value" id="bid_view_value_North">20</div>
+	</div>
+	
+	<div class="bid_view" id="bid_view_East">
+		<div class="bid_view_title" id="bid_view_title_East">Bid:</div>
+		<div class="bid_view_value" id="bid_view_value_East">20</div>
+	</div>
+
+	<div class="bid_view" id="bid_view_South" >
+		<div class="bid_view_title" id="bid_view_title_South">Bid:</div>
+		<div class="bid_view_value" id="bid_view_value_South">20</div>
+	</div>
+
+	<div class="meld_view_north_south" id="meld_view_South">
+			<div class="meld_view_title" id="meld_view_title_South">Meld</div>
+			<div class="meld_view_value" id="meld_view_value_South">0</div>
+	</div>
+
+	<div class="meld_view_north_south" id="meld_view_North">
+		<div class="meld_view_title" id="meld_view_title_North">Meld</div>
+		<div class="meld_view_value" id="meld_view_value_North">0</div>
+	</div>
+	
+	<div class="meld_view_east_west" id="meld_view_West">
+			<div class="meld_view_title" id="meld_view_title_West">Meld</div>
+			<div class="meld_view_value" id="meld_view_value_West">0</div>
+	</div>
+
+	<div class="meld_view_east_west" id="meld_view_East">
+		<div class="meld_view_title" id="meld_view_title_East">Meld</div>
+		<div class="meld_view_value" id="meld_view_value_East">0</div>
+	</div>
+
+	<div id="accept_meld_view">
+		<div id="accept_meld_view_prompt">Contract is unreachable.<br>You must throw in.</div>
+		<button id="accept_meld_view_button" onclick="game.OnAcceptMeldButtonPressed();" style="width:200px;height:60px">Continue</button>
+		<button id="thow_in_button" onclick="game.OnThrowInButtonPressed();" style="width:200px;height:60px">Throw In</button>
+	</div>
+
+	<div id="trick_score_bubble">
+		<div id="trick_score_points">+40</div>
+		<div id="trick_score_label">Counters</div>
+	</div>
+
+	<button id="accept_trick_result" onclick="game.OnAcceptTrickButtonPressed();">Continue</button>
+	
+	<div id="round_result_view">
+		<div id="round_result_title">Round 1</div>
+		<div id="round_result_names_row">
+			<div id="round_result_names_north_south">You &<br>Amelia</div>
+			<div id="round_result_names_east_west">Catalina<br>& Seward</div>
+		</div>
+		<div class="round_result_row">
+			<div id="round_result_bid_label" class="round_result_row_label">Bid</div>
+			<div id="round_result_bid_north_south" class="round_result_row_value_north_south">(22)</div>
+			<div id="round_result_bid_east_west" class="round_result_row_value_east_west">(22)</div>
+		</div>
+		<div class="round_result_row">
+			<div id="round_result_melds_label" class="round_result_row_label">Meld</div>
+			<div id="round_result_melds_north_south" class="round_result_row_value_north_south">(22)</div>
+			<div id="round_result_melds_east_west" class="round_result_row_value_east_west">(22)</div>
+		</div>
+		<div class="round_result_row">
+			<div id="round_result_counters_label" class="round_result_row_label">Counters</div>
+			<div id="round_result_counters_north_south" class="round_result_row_value_north_south">(22)</div>
+			<div id="round_result_counters_east_west" class="round_result_row_value_east_west">(22)</div>
+		</div>
+		<center>
+			<div id="round_result_line"></div>
+		</center>
+		<div id="round_result_totals_row">
+			<div id="round_result_totals_label">Round<br>Score</div>
+			<div id="round_result_totals_north_south">+30</div>
+			<div id="round_result_totals_east_west">+30</div>
+		</div>
+		<button id="accept_round_result_button" onclick="game.OnAcceptRoundResultButtonPressed();">OK</button>
+	</div>
+
+	<div id="round_simulations_view">
+		<button id="round_simulations_close_button" class="close_button" onclick="HideRoundSimulationsView()">X</button>
+		<div id="round_simulations_title">Bid Analysis</div>
+		<div id="round_simulations_subtitle">This is the range of scores for your hand after 1000 round simulations*</div>
+		<div id="round_simulations_graphs_container">
+			<div id="round_simulations_histogram_0" class="round_simulations_histogram"></div>
+			<div id="round_simulations_histogram_1" class="round_simulations_histogram"></div>
+			<div id="round_simulations_histogram_2" class="round_simulations_histogram"></div>
+			<div id="round_simulations_histogram_3" class="round_simulations_histogram"></div>
+			<div id="round_simulations_explanation">* These graphs show the results of simulations of rounds where a player starts with your cards, wins the bid, and then declares the trump suit.  When running each round simulation, the remaining cards are randomly dealt to the rest of the players and all players (including you) are assumed to play the rest of the round using the 'Standard' skill level.<br><br>The Safe Bid indicator is shown at the score that 90% of the simulations achieved.  The Recommended Bid indicator is shown at the score that 75% of the simulations achieved.</div>
+		</div>
+	</div>
+
+	<div id="GameOverView">
+		<div id="GameOverResultText">You won!</div>
+		<div id="GameOverResultText2">vs the easy players</div>
+	</div>
+
+	<button id="menu_button" onclick="MenuButtonPressed()">
+		<img src="images/MenuButton.png" ondragstart="return false;" />
+	</button>
+
+	<div id="menu_main" class="menu_view">
+		<button id="menu_main_close_button" class="close_button" onclick="menu_main_close_click()">X</button>
+		<button id="start_game_button" class="menu_button" onclick="ShowStartAGameMenu()">Start A Game</button>
+		<button id="settings_button" class="menu_button" onclick="ShowSettingsMenu()">Settings</button>
+		<button id="statistics_button" class="menu_button" onclick="ShowStatisticsMenu()">Statistics</button>
+		<button id="rules_button" class="menu_button" onclick="ShowRulesMenu()">Rules</button>
+		<button id="play_as_computer_button" class="menu_button" onclick="ShowPlayAsAComputerMenu()">Play With Code</button>
+	</div>
+
+	<div id="menu_start_a_game" class="menu_view">
+		<div id="menu_start_a_game_title" class="menu_card_title">Choose opponent skill:</div>
+		<button id="menu_start_a_game_close_button" class="close_button" onclick="menu_card_close_click()">X</button>
+		<button id="easy_game_button" class="menu_button" onclick="menu_start_game_click('Easy')">Easy</button>
+		<button id="standard_game_button" class="menu_button" onclick="menu_start_game_click('Standard')">Standard</button>
+		<button id="pro_game_button" class="menu_button" onclick="menu_start_game_click('Pro')">Pro</button>
+		<div style="text-align:center;font-size:12pt; pointer-events: none;">Cards are dealt randomly for all difficulty levels.</div>
+		<a id="menu_start_a_game_difficulties_link" onclick="ShowDifficultiesExplainedMenu()" href="#">Click here to learn how difficulties work</a>
+	</div>
+
+	<div id="menu_difficulties_explained" class="menu_view">
+		<div id="menu_difficulties_explained_title" class="menu_card_title">Computer Difficulty Levels Explained</div>
+		<button id="menu_difficulties_explained_close_button" class="close_button" onclick="menu_card_close_click()">X</button>
+		<div id="menu_difficulties_explained_body">
+				For all three difficulty levels the cards are dealt completely at random to you and to the computer players.  Computer players are not given any special advantage and they do not know what cards are in your hand or in any of the other players' hands.  The difference between the easy, standard, and pro players is their memory of what cards have been played and their strategies used to choose their plays.  If you are finding that the computer is beating you, you will likely benefit from understanding how the computer chooses its next move.
+			<br>
+			<br>
+			<center>
+				<div style="font-size:16pt">
+					<u>Easy Computer Strategy</u>
+				</div>
+			</center>
+			<table class="menu_table_bordered" style="width:100%; text-align:left; font-size:12pt; margin-top:10pt">
+				<tr>
+					<td valign="top" width="80pt">Bidding:</td>
+					<td>Generate a maximum willing bid by picking a random number.  Increment the bid until it is above the maximum willing bid, then pass.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Declaring Trump:</td>
+					<td>Declare trump suit with whichever suit has the highest sum of card values.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Passing Cards To Declarer:</td>
+					<td>Pass a random set of cards.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Passing Cards As The Declarer:</td>
+					<td>Pass a random set of cards.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Trick-Taking:</td>
+					<td>Play a random legal card.</td>
+				</tr>
+			</table>
+			<br>
+			<center>
+				<div style="font-size:16pt">
+					<u>Standard Computer Strategy</u>
+				</div>
+			</center>
+			<table class="menu_table_bordered" style="width:100%; text-align:left; font-size:12pt; margin-top:10pt">
+				<tr>
+					<td valign="top" width="80pt">Bidding:</td>
+					<td>Simulate many rounds with cards randomly dealt to standard strategy players.  Set the maximum willing bid at the round score achieved in more than 83% of the simulations.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Declaring Trump:</td>
+					<td>Simulate many rounds with cards randomly dealt to standard strategy players.  Pick the trump suit that resulted in the highest willing bid.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Passing Cards To Declarer:</td>
+					<td>First prefer not to pass any cards that result in a meld score for your hand.  Then, prefer to first pass highest trump cards.  Then prefer highest non-trump cards.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Passing Cards As The Declarer:</td>
+					<td>First prefer not to pass any cards that result in a meld score for our hand.  Then, prefer to first pass non-ace cards that would make us void in a suit, then prefer non-trump kings, then non-trump queens, then jack of diamonds (except if just received from partner), then lowest non-trump cards, then lowest trump cards.  Finally, if necessary, we would choose to pass the cards that contribute the least amount of points to our meld score.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Trick-Taking When Leading:</td>
+					<td>Remembering what has been played and what was shown during passing and melding, play the highest trump card that is guaranteed to take the trick.  Otherwise, play the highest non trump card.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Trick-Taking When Following Lead:</td>
+					<td>If we don't have a play that can beat what is currently in the trick pile, then if our partner played the current highest trick card then we play our lowest counter.  Otherwise we play our lowest card.  If we do have play options that could beat what is currently in the trick pile, then we play our highest winning card unless we are playing last.  If we are playing last and we can take the trick then we play our lowest card that can take the trick.</td>
+				</tr>
+			</table>
+			<br>
+			<center>
+				<div style="font-size:16pt">
+					<u>Pro Computer Strategy</u>
+				</div>
+			</center>
+			<table class="menu_table_bordered" style="width:100%; text-align:left; font-size:12pt; margin-top:10pt">
+				<tr>
+					<td valign="top" width="80pt">Bidding:</td>
+					<td>Simulate many rounds with cards randomly dealt to standard strategy players.  Set the maximum willing bid at the round score achieved in more than 75% of the simulations.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Declaring Trump:</td>
+					<td>Simulate many rounds with cards randomly dealt to standard strategy players.  Pick the trump suit that resulted in the highest willing bid.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Passing Cards To Declarer:</td>
+					<td>First prefer not to pass any cards that result in a meld score for your hand.  Then, prefer to pass highest trump cards (except 9's of trump).  Then prefer aces.  Then prefer 9s of trump.  Then prefer queen of spades or jack of diamonds.  Then prefer jacks.  Then prefer nines.  Then pass the cards that contribute the least amount of points to our meld score.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Passing Cards As The Declarer:</td>
+					<td>First prefer not to pass any cards that result in a meld score for our hand.  Then prefer non-trump kings, then non-trump queens, then jack of diamonds (except if just received from partner), then lowest non-trump cards, then lowest trump cards.  Finally, if necessary, we would choose to pass the cards that contribute the least amount of points to our meld score.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Trick-Taking When Leading:</td>
+					<td>First remove bad options:  For each legal play, simulate the rest of the round 200 times with random deals of the unseen cards.  If any play results in an average round score that is more than half a point lower than the highest average play, then remove it from the options considered.<br><br>Remembering what has been played and what was shown during passing and melding, play the highest trump card that is guaranteed to take the trick.  Otherwise, play the highest non trump card that is guaranteed to take the trick.  Otherwise, play the lowest card.</td>
+				</tr>
+				<tr>
+					<td valign="top" width="80pt">Trick-Taking When Following Lead:</td>
+					<td>First remove bad options:  For each legal play, simulate the rest of the round 200 times with random deals of the unseen cards.  If any play results in an average round score that is more than half a point lower than the highest average play, then remove it from the options considered.<br><br>If we don't have a play that can beat what is currently in the trick pile, then if our partner played the current highest trick card then we play our lowest counter.  Otherwise we play our lowest card.  If we do have play options that could beat what is currently in the trick pile, then we play our highest winning card unless we are playing the last trick card.  If we are playing last and we can take the trick then we play our lowest card that can take the trick.</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div id="menu_settings" class="menu_view">
+		<div id="menu_settings_title" class="menu_card_title">Settings</div>
+		<button id="menu_settings_close_button" class="close_button" onclick="menu_card_close_click()">X</button>
+		<div id="menu_settings_body">
+			<table style="width:100%; text-align:left; font-size:14pt;">
+				<tr>
+					<td>Hint/Analyze button on all levels:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<label class="switch">
+							<input id="setting_hints_checkbox" type="checkbox" onclick="SettingHintsClicked(this)">
+							<span class="slider round"></span>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>Undo button on all levels:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<label class="switch">
+							<input id="setting_undo_checkbox" type="checkbox" onclick="SettingUndoClicked(this)">
+							<span class="slider round"></span>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>Sort cards left to right:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<label class="switch">
+							<input id="setting_sort_left_to_right_checkbox" type="checkbox" onclick="SettingSortLeftToRightClicked(this)">
+							<span class="slider round"></span>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>Score in multiples of ten:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<label class="switch">
+							<input id="setting_score_multiplier_checkbox" type="checkbox" onclick="SettingScoreMultiplierClicked(this)">
+							<span class="slider round"></span>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>Card deck count:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<select id="deck_count_dropdown" class="setting_dropdown" onchange="SettingDeckCountChanged(this)">
+							<option value="0">Single</option>
+							<option value="1">Double</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Winning score:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<select id="winning_score_dropdown" class="setting_dropdown" onchange="SettingWinningScoreChanged(this)">
+							<option class="setting" value="100">100</option>
+							<option value="150">150</option>
+							<option value="200">200</option>
+							<option value="250">250</option>
+							<option value="300">300</option>
+							<option value="500">500</option>
+							<option value="1000">1000</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Bidding speed:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<select id="bidding_speed_dropdown" class="setting_dropdown" onchange="SettingBiddingSpeedChanged(this)">
+							<option value="0">Normal</option>
+							<option value="1">Fast</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Minimum bid:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<select id="minimum_bid_dropdown" class="setting_dropdown" onchange="SettingMinimumBidChanged(this)">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+							<option value="31">31</option>
+							<option value="32">32</option>
+							<option value="33">33</option>
+							<option value="34">34</option>
+							<option value="35">35</option>
+							<option value="36">36</option>
+							<option value="37">37</option>
+							<option value="38">38</option>
+							<option value="39">39</option>
+							<option value="40">40</option>
+							<option value="41">41</option>
+							<option value="42">42</option>
+							<option value="43">43</option>
+							<option value="44">44</option>
+							<option value="45">45</option>
+							<option value="46">46</option>
+							<option value="47">47</option>
+							<option value="48">48</option>
+							<option value="49">49</option>
+							<option value="50">50</option>
+							<option value="51">51</option>
+							<option value="52">52</option>
+							<option value="53">53</option>
+							<option value="54">54</option>
+							<option value="55">55</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Passing cards count:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<select id="passing_cards_count_dropdown" class="setting_dropdown" onchange="SettingPassingCardsCountChanged(this)">
+							<option value="0">0</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Trick-taking speed:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<select id="trick_taking_speed_dropdown" class="setting_dropdown" onchange="SettingTrickTakingSpeedChanged(this)">
+							<option value="0">Slow</option>
+							<option value="1">Normal</option>
+							<option value="2">Fast</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Trick-taking display:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<select id="trick_taking_display_dropdown" class="setting_dropdown" onchange="SettingTrickTakingDisplayChanged(this)">
+							<option value="0">None</option>
+							<option value="1">Round Totals</option>
+							<option value="2">Counters</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Preferred difficulty:</td>
+					<td style="text-align:right;padding-bottom:7pt">
+						<select id="preferred_difficulty_dropdown" class="setting_dropdown" onchange="SettingPreferredDifficultyDisplayChanged(this)">
+							<option value="0">Prompt</option>
+							<option value="1">Easy</option>
+							<option value="2">Standard</option>
+							<option value="3">Pro</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<div style="text-align:left; font-size:14pt; padding-top:5pt">Board Background:</div>
+			<div class="image-selector">
+				<input id="wood_light" type="radio" name="settings_boardbackground_selector" value="wood_light" onclick="BoardSelectorClick(this)"
+				/>
+				<label class="board-selector-item background_wood_light" for="wood_light"></label>
+				<input id="wood" type="radio" name="settings_boardbackground_selector" value="wood" onclick="BoardSelectorClick(this)" />
+				<label class="board-selector-item background_wood" for="wood"></label>
+				<input id="wood_dark" type="radio" name="settings_boardbackground_selector" value="wood_dark" onclick="BoardSelectorClick(this)"
+				/>
+				<label class="board-selector-item background_wood_dark" for="wood_dark"></label>
+				<input id="wood_gray" type="radio" name="settings_boardbackground_selector" value="wood_gray" onclick="BoardSelectorClick(this)"
+				/>
+				<label class="board-selector-item background_wood_gray" for="wood_gray"></label>
+				<input id="green" type="radio" name="settings_boardbackground_selector" value="green" onclick="BoardSelectorClick(this)"
+				/>
+				<label class="board-selector-item background_green" for="green"></label>
+				<input id="red" type="radio" name="settings_boardbackground_selector" value="red" onclick="BoardSelectorClick(this)" />
+				<label class="board-selector-item background_red" for="red"></label>
+				<input id="blue" type="radio" name="settings_boardbackground_selector" value="blue" onclick="BoardSelectorClick(this)" />
+				<label class="board-selector-item background_blue" for="blue"></label>
+			</div>
+
+			<div style="text-align:left; font-size:14pt; padding-top:5pt">Card Color:</div>
+			<div class="image-selector">
+				<input id="card_blue" type="radio" name="settings_card_color_selector" value="blue" onclick="CardSelectorClick(this)" />
+				<label class="card-selector-item card_back_blue" for="card_blue"></label>
+				<input id="card_red" type="radio" name="settings_card_color_selector" value="red" onclick="CardSelectorClick(this)" />
+				<label class="card-selector-item card_back_red" for="card_red"></label>
+				<input id="card_green" type="radio" name="settings_card_color_selector" value="green" onclick="CardSelectorClick(this)" />
+				<label class="card-selector-item card_back_green" for="card_green"></label>
+			</div>
+		</div>
+	</div>
+
+	<div id="menu_statistics" class="menu_view">
+		<div id="menu_statistics_title" class="menu_card_title">Statistics</div>
+		<button id="menu_statistics_close_button" class="close_button" onclick="menu_card_close_click()">X</button>
+
+		<center>
+			<table style="width: calc(100% - 20px); font-size: 12pt;">
+				<tr>
+					<td class="menu_statistics_table_category"></td>
+					<td class="menu_statistics_table_stat">Easy</td>
+					<td class="menu_statistics_table_stat">Standard</td>
+					<td class="menu_statistics_table_stat">Pro</td>
+					<td class="menu_statistics_table_stat_total">Total</td>
+				</tr>
+			</table>
+		</center>
+
+		<div id="menu_statistics_body">
+			<center>
+				<table class="menu_table_outline">
+					<tr>
+						<td class="menu_statistics_table_category">Games Played</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_games_played_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_games_played_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_games_played_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_games_played_Total">0</td>
+					</tr>
+					<tr>
+						<td class="menu_statistics_table_category">Wins</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_wins_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_wins_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_wins_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_wins_Total">0</td>
+					</tr>
+					<tr>
+						<td class="menu_statistics_table_category">Win Percentage</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_win_percent_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_win_percent_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_win_percent_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_win_percent_Total"></td>
+					</tr>
+				</table>
+
+				<div style="margin-top:10pt; font-size:12pt;">Averages when you declare trump:</div>
+				<table class="menu_table_outline">
+					<tr>
+						<td class="menu_statistics_table_category">Avg Bid Contract</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_bid_contract_with_bid_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_bid_contract_with_bid_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_bid_contract_with_bid_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_avg_bid_contract_with_bid_Total">0</td>
+					</tr>
+					<tr>
+						<td class="menu_statistics_table_category">Avg Meld</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_meld_with_bid_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_meld_with_bid_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_meld_with_bid_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_avg_meld_with_bid_Total">0</td>
+					</tr>
+					<tr>
+						<td class="menu_statistics_table_category">Avg Counters</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_counters_with_bid_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_counters_with_bid_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_counters_with_bid_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_avg_counters_with_bid_Total"></td>
+					</tr>
+					<tr>
+						<td class="menu_statistics_table_category" style="font-size:10pt">Avg Positive Round Score</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_round_score_with_bid_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_round_score_with_bid_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_round_score_with_bid_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_avg_round_score_with_bid_Total"></td>
+					</tr>
+					<tr>
+						<td class="menu_statistics_table_category">Make Contract %</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_make_contract_percent_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_make_contract_percent_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_make_contract_percent_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_make_contract_percent_Total"></td>
+					</tr>
+				</table>
+
+				<div style="margin-top:10pt; font-size:12pt;">Averages when opponent declares trump:</div>
+				<table class="menu_table_outline">
+					<tr>
+						<td class="menu_statistics_table_category">Avg Meld</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_meld_without_bid_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_meld_without_bid_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_meld_without_bid_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_avg_meld_without_bid_Total">0</td>
+					</tr>
+					<tr>
+						<td class="menu_statistics_table_category">Avg Counters</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_counters_without_bid_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_counters_without_bid_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_counters_without_bid_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_avg_counters_without_bid_Total"></td>
+					</tr>
+					<tr>
+						<td class="menu_statistics_table_category">Avg Round Score</td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_round_score_without_bid_Easy"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_round_score_without_bid_Standard"></td>
+						<td class="menu_statistics_table_stat" id="menu_stat_avg_round_score_without_bid_Pro"></td>
+						<td class="menu_statistics_table_stat_total" id="menu_stat_avg_round_score_without_bid_Total"></td>
+					</tr>
+				</table>
+				
+				<table id="menu_statistics_buttons_table">
+					<tr>
+						<td>
+							<center>
+								<button id="menu_statistics_reset_button" onclick="ResetStatisticsButtonClick()">Reset
+									<br>Statistics</button>
+							</center>
+						</td>
+					</tr>
+				</table>
+			</center>
+		</div>
+	</div>
+	
+	<div id="menu_rules" class="menu_view">
+		<div id="menu_rules_title" class="menu_card_title">Pinochle Rules</div>
+		<button id="menu_rules_close_button" class="close_button" onclick="menu_card_close_click()">X</button>
+		<div id="menu_rules_body">
+			Pinochle is a team card game played in rounds.
+			<br>
+			<br>
+			<center>
+				<div style="font-size:15pt">
+					Card Deck
+				</div>
+			</center>
+			<div id="menu_rules_card_deck"></div>
+			<br>
+			<center>
+				<div style="font-size:15pt">
+					Round Stages
+				</div>
+			</center>
+			A game of pinochle is played in rounds.  Each round has 3 stages:  Bidding, Melding, and Trick-Taking.  At the start of each round, all cards are dealt to all four players.
+			<br>
+			<br>
+			<center>
+				<div style="font-size:15pt">
+					Bidding
+				</div>
+			</center>
+			The first stage of a round is the bidding stage.  Players bid on the minimum points their team will be able to score in the round.<br><br>The first person to bid is required to start the bidding at a minimum bid (editable in app settings).  In clockwise order, each player either increases the bid by at least one or passes.  The bidding is complete when all but one player has passed.<br><br>When a player wins the bidding stage the contract is set for their team.  Their team will need to score at least as many points as they bid or their overall score will be reduced by their contract.<br><br>The player that wins the bid then declares what the trump (highest) suit will be for the rest of the round.
+			<br>
+			<br>
+			<center>
+				<div style="font-size:15pt">
+					Passing Cards
+				</div>
+			</center>
+			<div id="menu_rules_passing_cards"></div>
+			<br>
+			<center>
+				<div style="font-size:15pt">
+					Melding
+				</div>
+			</center>
+			All players evaluate their hands and lay down specific combinations of cards worth different points.  The following table shows all of the meld combinations and their point values:
+			<br>
+			<br>
+			<center>
+				<table class='menu_rules_bordered' style="text-align:center; font-size:10pt;">
+					<tr>
+						<td rowspan="2">Type</td>
+						<td rowspan="2">Combination</td>
+						<td id="menu_rules_cell_points" rowspan="1" colspan="4">Points</td>
+					</tr>
+					<tr>
+						<td>Single</td>
+						<td>Double</td>
+						<td id="menu_rules_cell_points_3x">x3</td>
+						<td id="menu_rules_cell_points_4x">x4</td>
+					</tr>
+					<tr>
+						<td>Runs</td>
+						<td>A,10,K,Q,J Trump</td>
+						<td>15</td>
+						<td>150</td>
+						<td id="menu_rules_cell_run_3x">225</td>
+						<td id="menu_rules_cell_run_4x">300</td>
+					</tr>
+					<tr>
+						<td rowspan="2">Marriages</td>
+						<td>K,Q, Trump</td>
+						<td>4</td>
+						<td>8</td>
+						<td id="menu_rules_cell_royalmarriage_3x">12</td>
+						<td id="menu_rules_cell_royalmarriage_4x">16</td> 
+					</tr>
+					<tr>
+						<td>K,Q</td>
+						<td>2</td>
+						<td>4</td>
+						<td id="menu_rules_cell_marriage_3x">6</td>
+						<td id="menu_rules_cell_marriage_4x">8</td>
+					</tr>
+					<tr>
+						<td rowspan="5">Arounds</td>
+					</tr>
+					<tr>
+						<td>A each suit</td>
+						<td>10</td>
+						<td>100</td>
+						<td id="menu_rules_cell_acesaround_3x">150</td>
+						<td id="menu_rules_cell_acesaround_4x">200</td>
+					</tr>
+					<tr>
+						<td>K each suit</td>
+						<td>8</td>
+						<td>80</td>
+						<td id="menu_rules_cell_kingsaround_3x">120</td>
+						<td id="menu_rules_cell_kingsaround_4x">160</td>
+					</tr>
+					<tr>
+						<td>Q each suit</td>
+						<td>6</td>
+						<td>60</td>
+						<td id="menu_rules_cell_queensaround_3x">90</td>
+						<td id="menu_rules_cell_queensaround_4x">120</td>
+					</tr>
+					<tr>
+						<td>J each suit</td>
+						<td>4</td>
+						<td>40</td>
+						<td id="menu_rules_cell_jacksaround_3x">60</td>
+						<td id="menu_rules_cell_jacksaround_4x">90</td>
+					</tr>
+					<tr>
+						<td>Pinochle</td>
+						<td>Q♤,J♢</td>
+						<td>4</td>
+						<td>30</td>
+						<td id="menu_rules_cell_pinochle_3x">60</td>
+						<td id="menu_rules_cell_pinochle_4x">90</td>
+					</tr>
+					<tr id="menu_rules_row_dix">
+						<td>Dix</td>
+						<td>9 Trump</td>
+						<td>1</td>
+						<td>2</td>
+					</tr>
+				</table>
+			</center>
+			<br>
+			Melds may share cards between them except that the marriage contained in a run is not counted.<br><br>After meld points are counted, all cards are returned to players' hands to begin the final stage of the round.
+			<br>
+			<br>
+			<center>
+				<div style="font-size:15pt">
+					Trick-Taking
+				</div>
+			</center>
+			<div id="menu_rules_tricktaking"></div>
+			<br>
+			<center>
+				<div style="font-size:15pt">
+					Round Scosring
+				</div>
+			</center>
+			Following trick play, the meld and counters are added.<br><br>If the declaring team scores enough points to meet or exceed their bid, all the earned points are added to their previous score. Otherwise, their previous score is reduced by the amount bid.<br><br>If the non-declaring team fails to earn a single point while taking tricks they do not receive credit for the points that they melded.
+			<br>
+			<br>
+			<center>
+				<div style="font-size:15pt">
+					Game Over
+				</div>
+			</center>
+			Rounds are played until one team reaches the winning score.  If both sides reach the winning score on the same hand, the bidding side wins.  The winning score can be set in the app settings.
+			<br>
+			<br>
+		</div>
+	</div>
+
+	<div id="play_more_games_menu">
+		<div id="play_more_games_title">Play More<br>Card Classics</div>
+		<button id="play_more_games_close_button" class="close_button" onclick="play_more_games_close_click()">X</button>
+		<a class="more_games_icon_button" href="http://www.heartscardclassic.com" style="margin-top: 50pt">
+			<span style="display: block; width:100%; height:100%">
+				<div id="more_games_icon_hearts"></div>
+				<div class="more_games_icon_title">
+					<center>
+						<div class="more_games_icon_title1">HEARTS</div>
+						<div class="more_games_icon_title2">CARD CLASSIC</div>
+					</center>
+				</div>
+			</span>
+		</a>
+		<a class="more_games_icon_button" href="http://www.spadescardclassic.com">
+			<span style="display: block; width:100%; height:100%">
+				<div id="more_games_icon_spades"></div>
+				<div class="more_games_icon_title">
+					<center>
+						<div class="more_games_icon_title1">SPADES</div>
+						<div class="more_games_icon_title2">CARD CLASSIC</div>
+					</center>
+				</div>
+			</span>
+		</a>
+		<a class="more_games_icon_button" href="http://www.cribbageclassic.com">
+			<span style="display: block; width:100%; height:100%">
+				<div id="more_games_icon_cribbage"></div>
+				<div class="more_games_icon_title">
+					<center>
+						<div class="more_games_icon_title1">CRIBBAGE</div>
+						<div class="more_games_icon_title2">CARD CLASSIC</div>
+					</center>
+				</div>
+			</span>
+		</a>
+	</div>
+</body>
+
+</html>

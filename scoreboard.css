@@ -1,0 +1,266 @@
+#scoreboard {
+    position: absolute;
+    width: 200px;
+    height: 172px;
+    left: 25px;
+    top: -152px;
+}
+
+#scoreboardBackground {
+    position: absolute;
+    width: 200px;
+    height: 80px;
+    left: 0px;
+    top: 0px;
+    background: #00000077;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    overflow: hidden;
+}
+
+#scoreboardDifficulty {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    font-size: 12pt;
+    color: #000000;
+    text-align: center;
+    top: 80px;
+    left: -12px;
+    transform-origin: left;
+    text-align: center;
+    transform: rotate(-90deg);
+}
+
+#scoreboardNorthSouth {
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    left: 0px;
+    background: #0000FFBB;
+}
+
+#scoreboardEastWest {
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    left: 100px;
+    background: #FF0000BB;
+}
+
+.scoreboardName {
+    color: white;
+    text-align: center;
+    font-size: 14pt;
+    margin: 3px 5px;
+    text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);
+}
+
+#scoreboardScoreBackgroundNorthSouth {
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    background: #0000FFBB;
+    border: 2px solid #0000FF;
+    top: 50px;
+    box-sizing: border-box;
+}
+
+#scoreboardScoreBackgroundEastWest {
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    background: #FF0000BB;
+    border: 2px solid #FF0000;
+    top: 50px;
+    box-sizing: border-box;
+}
+
+#scoreboardScoreFillNorthSouth {
+    position: absolute;
+    width: 50%;
+    height: 30px;
+    background: #0000FF;
+    top: 50px;
+}
+
+#scoreboardScoreFillEastWest {
+    position: absolute;
+    width: 50%;
+    height: 30px;
+    background: #FF0000;
+    top: 50px;
+}
+
+.scoreboardScore {
+    position: absolute;
+    color: white;
+    text-align: center;
+    font-size: 16pt;
+    text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);
+    top: 50px;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+}
+
+#scoreboardRowBid {
+    position: absolute;
+    width: 200px;
+    height: 25px;
+    top: 82px;
+}
+
+#scoreboardRowMeld {
+    position: absolute;
+    width: 200px;
+    height: 25px;
+    top: 107px;
+}
+
+#scoreboardRowCounters {
+    position: absolute;
+    width: 200px;
+    height: 25px;
+    top: 132px;
+}
+
+.scoreboardRowTitle {
+    position: absolute;
+    width: 100%;
+    color: white;
+    text-align: center;
+    font-size: 12pt;
+    text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);
+    height: 25px;
+    line-height: 25px;
+}
+
+.scoreboardRowLabelNorthSouth {
+    position: absolute;
+    width: 40%;
+    color: white;
+    text-align: center;
+    font-size: 12pt;
+    text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);
+    height: 25px;
+    line-height: 25px;
+}
+
+.scoreboardRowLabelEastWest {
+    position: absolute;
+    width: 40%;
+    right: 0px;
+    color: white;
+    text-align: center;
+    font-size: 12pt;
+    text-shadow: 2pt 2pt rgba(0, 0, 0, 0.5);
+    height: 25px;
+    line-height: 25px;
+}
+
+#scoreboardRoundScoresRegion {
+    position: absolute;
+    left: 200px;
+    width: 150px;
+    height: 100%;
+    overflow: auto;
+}
+
+.scoreboardRoundEntrySeparator {
+    position: absolute;
+    width: 1px;
+    background: #999999;
+    height: 139px;
+    top: 10px;
+}
+
+.scoreboardRoundNumber {
+    position: absolute;
+    width: 150px;
+    top: 8px;
+    font-size: 14px;
+    text-align: center;
+    color: white;
+}
+
+.scoreboardRoundNameNorthSouth {
+    position: absolute;
+    width: 70px;
+    height: 25px;
+    line-height: 25px;
+    top: 30px;
+    font-size: 14px;
+    text-align: center;
+    color: white;
+    background: #0000BB;
+}
+
+.scoreboardRoundNameEastWest {
+    position: absolute;
+    width: 70px;
+    height: 25px;
+    line-height: 25px;
+    top: 30px;
+    font-size: 14px;
+    text-align: center;
+    color: white;
+    background: #FF0000;
+}
+
+.scoreboardRoundLabel {
+    position: absolute;
+    width: 150px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    text-align: center;
+    color: white;
+}
+
+.scoreboardRoundValueNorthSouth {
+    position: absolute;
+    width: 70px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 14px;
+    text-align: center;
+    color: white;
+}
+
+.scoreboardRoundValueEastWest {
+    position: absolute;
+    width: 70px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 14px;
+    text-align: center;
+    color: white;
+}
+
+.scoreboardRoundHorizontalDivider {
+    position: absolute;
+    width: 140px;
+    height: 1.5px;
+    background: white;
+}
+
+.scoreboardRoundScoreNorthSouth {
+    position: absolute;
+    width: 70px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 22px;
+    text-align: center;
+    color: white;
+}
+
+.scoreboardRoundScoreEastWest {
+    position: absolute;
+    width: 70px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 22px;
+    text-align: center;
+    color: white;
+}
